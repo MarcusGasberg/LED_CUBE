@@ -5,6 +5,7 @@
  *  Author: Marcus Gasberg
  */ 
 
+#include <avr/io.h>
 
  ///*************************************************************************
  //Timer 2 initialization for the frame buffer interrupt for 8x8x8 LED CUBE

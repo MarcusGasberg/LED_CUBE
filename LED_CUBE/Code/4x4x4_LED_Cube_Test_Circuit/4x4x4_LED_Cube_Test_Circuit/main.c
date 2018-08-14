@@ -6,35 +6,107 @@
  */ 
 
 #include <avr/io.h>
+#include <avr/delay.h>
 #include <avr/interrupt.h>
 #include "Timers.h"
 
-//Shift register pins
-#define SHIFTREG_SRCLK 0b10000000
-#define SHIFTREG_SER1 0b00000001
-#define SHIFTREG_SER2 0b00000010
-#define SHIFTREG_RCLK 0b01000000
-#define SHIFTREG_PORT PORTB
+#define F_CPU 16000000
 
-volatile unsigned char buffer[2];
+//Shift register pins
+#define SHIFTREG_SERPORT PORTB
+#define SHIFTREG_CLKPORT PORTA
+#define SRCLK_PIN 0
+#define RCLK_PIN 1
+#define SER1_PIN 0
+#define SER2_PIN 1
+
+void setVoxel(int x,int y,int z);
+void clrVoxel(int x,int y,int z);
+unsigned char inRange(int x,int y,int z);
+
+volatile unsigned char buffer[4][4];
+volatile unsigned char y,z = 0;
 
 int main(void)
-{
-	DDRB = 0xFF;
+{	
+	DDRA = 0xFF; //Set PORTA Output
+	DDRB = 0xFF; //Set PORTB Output
+	PORTA = 0x00; //Clear PORTA
+	PORTB = 0x00; //Clear PORTB
+	SHIFTREG_CLKPORT |= (1<<RCLK_PIN);//Set the pin high to enable on output
+	SHIFTREG_CLKPORT &= ~(1<<RCLK_PIN);//Set the pin Low again
+	
 	initFrameBufferTimer();
 	sei();
     while (1) 
     {
+		setVoxel(0,0,0);
+		_delay_ms(5000);
+		setVoxel(1,0,0);
+		_delay_ms(5000);
+		setVoxel(2,0,0);
+		_delay_ms(5000);
+		setVoxel(3,0,0);
+		_delay_ms(5000);
+		setVoxel(0,1,0);
+		_delay_ms(5000);
+		setVoxel(1,1,0);
+		_delay_ms(5000);
+		setVoxel(2,1,0);
+		_delay_ms(5000);
+		setVoxel(3,1,0);
+		_delay_ms(5000);
     }
 }
 
 ISR(TIMER2_COMPA_vect)
 {
-	for (int i = 0; i<2; i++)
+	SHIFTREG_CLKPORT &= ~(1<<SRCLK_PIN); //Set SRCLK Low
+	SHIFTREG_CLKPORT &= ~(1<<RCLK_PIN);//Set RCLK pin Low 
+	for (unsigned char j = 0; j < 8; j++)
 	{
-		for (int j = 0 ; j < 8 ; j++)
+		if ((buffer[z][y] & (1<<j)) == 0 )
 		{
-			SHIFTREG_PORT |= buffer[i] 
+			SHIFTREG_SERPORT &= ~(1<<y);
 		}
+		else
+		{
+			SHIFTREG_SERPORT |= (1<<y);
+		}
+		SHIFTREG_CLKPORT |= (1<<SRCLK_PIN); //Set SRCLK High to store the values
+		SHIFTREG_CLKPORT &= ~(1<<SRCLK_PIN); //Set SRCLK Low
+	}
+	
+	SHIFTREG_CLKPORT |= (1<<RCLK_PIN);//Set the pin high to enable on output
+	
+	if (y++ == 3)
+	{
+		y = 0;
+	}
+}
+
+void setVoxel(int x,int y,int z)
+{
+	if(inRange(x,y,z))
+	{
+		buffer[z][y] |=(1<<x);
+	}
+}
+void clrVoxel(int x,int y,int z)
+{
+	if(inRange(x,y,z))
+	{
+		buffer[z][y] &= ~(1<<x);
+	}
+}
+unsigned char inRange(int x,int y,int z)
+{
+	if(x>=0 && x<4 && y>=0 && y<4 && z>=0 && z<4)
+	{
+		return 0x01;
+	}
+	else
+	{
+		return 0x00;
 	}
 }
