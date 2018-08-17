@@ -1,7 +1,7 @@
 /*
  * Timers.h
  *
- * Created: 7/31/2018 2:29:21 PM
+ * Created: 8/17/2018 12:23:44 PM
  *  Author: Marcus Gasberg
  */ 
 
@@ -10,7 +10,6 @@
 #define TIMERS_H_
 
 void initFrameBufferTimer();
-
 
 
 
