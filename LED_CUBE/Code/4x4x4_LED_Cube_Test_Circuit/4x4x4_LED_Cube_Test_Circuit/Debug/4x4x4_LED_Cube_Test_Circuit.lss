@@ -3,31 +3,31 @@
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000000  00800200  00800200  000002f0  2**0
+  0 .data         00000000  00800200  00800200  0000032e  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         0000027c  00000000  00000000  00000074  2**1
+  1 .text         000002ba  00000000  00000000  00000074  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .bss          00000012  00800200  00800200  000002f0  2**0
+  2 .bss          00000011  00800200  00800200  0000032e  2**0
                   ALLOC
-  3 .comment      00000030  00000000  00000000  000002f0  2**0
+  3 .comment      00000030  00000000  00000000  0000032e  2**0
                   CONTENTS, READONLY
-  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000320  2**2
+  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000360  2**2
                   CONTENTS, READONLY
-  5 .debug_aranges 000000a0  00000000  00000000  00000360  2**0
+  5 .debug_aranges 000000a0  00000000  00000000  000003a0  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   000011dd  00000000  00000000  00000400  2**0
+  6 .debug_info   000011c7  00000000  00000000  00000440  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 00000e35  00000000  00000000  000015dd  2**0
+  7 .debug_abbrev 00000e08  00000000  00000000  00001607  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   0000046f  00000000  00000000  00002412  2**0
+  8 .debug_line   0000048e  00000000  00000000  0000240f  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  00000174  00000000  00000000  00002884  2**2
+  9 .debug_frame  00000174  00000000  00000000  000028a0  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    0000064a  00000000  00000000  000029f8  2**0
+ 10 .debug_str    00000657  00000000  00000000  00002a14  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    000007f2  00000000  00000000  00003042  2**0
+ 11 .debug_loc    000007f2  00000000  00000000  0000306b  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 000000e8  00000000  00000000  00003834  2**0
+ 12 .debug_ranges 000000e8  00000000  00000000  0000385d  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -59,7 +59,7 @@ Disassembly of section .text:
   2e:	00 00       	nop
   30:	6b c0       	rjmp	.+214    	; 0x108 <__bad_interrupt>
   32:	00 00       	nop
-  34:	e5 c0       	rjmp	.+458    	; 0x200 <__vector_13>
+  34:	e8 c0       	rjmp	.+464    	; 0x206 <__vector_13>
   36:	00 00       	nop
   38:	67 c0       	rjmp	.+206    	; 0x108 <__bad_interrupt>
   3a:	00 00       	nop
@@ -168,11 +168,11 @@ Disassembly of section .text:
   fc:	1d 92       	st	X+, r1
 
 000000fe <.do_clear_bss_start>:
-  fe:	a2 31       	cpi	r26, 0x12	; 18
+  fe:	a1 31       	cpi	r26, 0x11	; 17
  100:	b2 07       	cpc	r27, r18
  102:	e1 f7       	brne	.-8      	; 0xfc <.do_clear_bss_loop>
  104:	30 d0       	rcall	.+96     	; 0x166 <main>
- 106:	b8 c0       	rjmp	.+368    	; 0x278 <_exit>
+ 106:	d7 c0       	rjmp	.+430    	; 0x2b6 <_exit>
 
 00000108 <__bad_interrupt>:
  108:	7b cf       	rjmp	.-266    	; 0x0 <__vectors>
@@ -221,7 +221,7 @@ void toggleVoxel(unsigned char x,unsigned char y,unsigned char z)
  13c:	ff 1f       	adc	r31, r31
  13e:	ee 0f       	add	r30, r30
  140:	ff 1f       	adc	r31, r31
- 142:	ee 5f       	subi	r30, 0xFE	; 254
+ 142:	ef 5f       	subi	r30, 0xFF	; 255
  144:	fd 4f       	sbci	r31, 0xFD	; 253
  146:	e1 0f       	add	r30, r17
  148:	f1 1d       	adc	r31, r1
@@ -243,25 +243,28 @@ void toggleVoxel(unsigned char x,unsigned char y,unsigned char z)
  164:	08 95       	ret
 
 00000166 <main>:
-volatile unsigned int z;
+volatile unsigned char buffer[4][4];
+volatile unsigned char currentLayer;
 
 int main(void)
 {
-	unsigned char i,j = 0;
-	z = 0;
- 166:	10 92 01 02 	sts	0x0201, r1	; 0x800201 <_edata+0x1>
- 16a:	10 92 00 02 	sts	0x0200, r1	; 0x800200 <_edata>
+	currentLayer = 0;
+ 166:	10 92 00 02 	sts	0x0200, r1	; 0x800200 <_edata>
 	initFrameBufferTimer();
- 16e:	6f d0       	rcall	.+222    	; 0x24e <initFrameBufferTimer>
+ 16a:	90 d0       	rcall	.+288    	; 0x28c <initFrameBufferTimer>
 	DDRA = 0xFF; //Set PORTA Output
- 170:	8f ef       	ldi	r24, 0xFF	; 255
- 172:	81 b9       	out	0x01, r24	; 1
+ 16c:	8f ef       	ldi	r24, 0xFF	; 255
+ 16e:	81 b9       	out	0x01, r24	; 1
 	DDRB = 0xFF; //Set PORTB Output
- 174:	84 b9       	out	0x04, r24	; 4
+ 170:	84 b9       	out	0x04, r24	; 4
+	DDRC = 0xFF; //set PORTC Output
+ 172:	87 b9       	out	0x07, r24	; 7
 	PORTA = 0x00; //Clear PORTA
- 176:	12 b8       	out	0x02, r1	; 2
+ 174:	12 b8       	out	0x02, r1	; 2
 	PORTB = 0x00; //Clear PORTB
- 178:	15 b8       	out	0x05, r1	; 5
+ 176:	15 b8       	out	0x05, r1	; 5
+	PORTC = 0x00; //Clear PORTC
+ 178:	18 b8       	out	0x08, r1	; 8
 	sei();
  17a:	78 94       	sei
     while (1) 
@@ -301,8 +304,8 @@ int main(void)
  19a:	cf 5f       	subi	r28, 0xFF	; 255
  19c:	c4 30       	cpi	r28, 0x04	; 4
  19e:	81 f7       	brne	.-32     	; 0x180 <main+0x1a>
-	PORTA = 0x00; //Clear PORTA
 	PORTB = 0x00; //Clear PORTB
+	PORTC = 0x00; //Clear PORTC
 	sei();
     while (1) 
     {
@@ -312,7 +315,7 @@ int main(void)
  1a4:	59 f3       	breq	.-42     	; 0x17c <main+0x16>
 
 volatile unsigned char buffer[4][4];
-volatile unsigned int z;
+volatile unsigned char currentLayer;
 
 int main(void)
 {
@@ -320,169 +323,202 @@ int main(void)
  1a8:	eb cf       	rjmp	.-42     	; 0x180 <main+0x1a>
 
 000001aa <updateCube>:
-
-
-void updateCube()
-{
-	//Send each 8 bits serially
-	cli();
- 1aa:	f8 94       	cli
- 1ac:	67 e0       	ldi	r22, 0x07	; 7
- 1ae:	70 e0       	ldi	r23, 0x00	; 0
- 1b0:	a1 e0       	ldi	r26, 0x01	; 1
- 1b2:	b0 e0       	ldi	r27, 0x00	; 0
- 1b4:	18 c0       	rjmp	.+48     	; 0x1e6 <updateCube+0x3c>
 	{
 		for (unsigned char j = 0; j<4; j++)
 		{
 			//Output the data on DS line according to the
 			//Value of MSB
-			if((buffer[3-j][0] & (1<<7-i)) == 0 )
- 1b6:	f9 01       	movw	r30, r18
- 1b8:	ee 0f       	add	r30, r30
- 1ba:	ff 1f       	adc	r31, r31
- 1bc:	ee 0f       	add	r30, r30
- 1be:	ff 1f       	adc	r31, r31
- 1c0:	ee 5f       	subi	r30, 0xFE	; 254
- 1c2:	fd 4f       	sbci	r31, 0xFD	; 253
- 1c4:	80 81       	ld	r24, Z
- 1c6:	90 e0       	ldi	r25, 0x00	; 0
- 1c8:	84 23       	and	r24, r20
- 1ca:	95 23       	and	r25, r21
- 1cc:	89 2b       	or	r24, r25
- 1ce:	11 f4       	brne	.+4      	; 0x1d4 <updateCube+0x2a>
+			if((buffer[3-j][currentLayer] & (1<<7-i)) == 0 )
+ 1aa:	67 e0       	ldi	r22, 0x07	; 7
+ 1ac:	70 e0       	ldi	r23, 0x00	; 0
+ 1ae:	a1 e0       	ldi	r26, 0x01	; 1
+ 1b0:	b0 e0       	ldi	r27, 0x00	; 0
+ 1b2:	1c c0       	rjmp	.+56     	; 0x1ec <updateCube+0x42>
+ 1b4:	80 91 00 02 	lds	r24, 0x0200	; 0x800200 <_edata>
+ 1b8:	f9 01       	movw	r30, r18
+ 1ba:	ee 0f       	add	r30, r30
+ 1bc:	ff 1f       	adc	r31, r31
+ 1be:	ee 0f       	add	r30, r30
+ 1c0:	ff 1f       	adc	r31, r31
+ 1c2:	ef 5f       	subi	r30, 0xFF	; 255
+ 1c4:	fd 4f       	sbci	r31, 0xFD	; 253
+ 1c6:	e8 0f       	add	r30, r24
+ 1c8:	f1 1d       	adc	r31, r1
+ 1ca:	80 81       	ld	r24, Z
+ 1cc:	90 e0       	ldi	r25, 0x00	; 0
+ 1ce:	84 23       	and	r24, r20
+ 1d0:	95 23       	and	r25, r21
+ 1d2:	89 2b       	or	r24, r25
+ 1d4:	11 f4       	brne	.+4      	; 0x1da <updateCube+0x30>
 			{
 				//MSB is 0 so output low
 				SHIFTREG_SERPORT &= ~(1<<SER_PIN);
- 1d0:	28 98       	cbi	0x05, 0	; 5
- 1d2:	01 c0       	rjmp	.+2      	; 0x1d6 <updateCube+0x2c>
+ 1d6:	28 98       	cbi	0x05, 0	; 5
+ 1d8:	01 c0       	rjmp	.+2      	; 0x1dc <updateCube+0x32>
 			}
 			else
 			{
 				//MSB is 1 so output high
 				SHIFTREG_SERPORT |= (1<<SER_PIN);
- 1d4:	28 9a       	sbi	0x05, 0	; 5
+ 1da:	28 9a       	sbi	0x05, 0	; 5
 			}
 			SHIFTREG_CLKPORT &= ~(1<< SHIFT_PIN);
- 1d6:	10 98       	cbi	0x02, 0	; 2
+ 1dc:	10 98       	cbi	0x02, 0	; 2
 			SHIFTREG_CLKPORT |= (1<< SHIFT_PIN);//Pulse the Shift Clock line
- 1d8:	10 9a       	sbi	0x02, 0	; 2
- 1da:	21 50       	subi	r18, 0x01	; 1
- 1dc:	31 09       	sbc	r19, r1
- 1de:	58 f7       	brcc	.-42     	; 0x1b6 <updateCube+0xc>
- 1e0:	61 50       	subi	r22, 0x01	; 1
- 1e2:	71 09       	sbc	r23, r1
- 1e4:	50 f0       	brcs	.+20     	; 0x1fa <updateCube+0x50>
- 1e6:	ad 01       	movw	r20, r26
- 1e8:	06 2e       	mov	r0, r22
- 1ea:	02 c0       	rjmp	.+4      	; 0x1f0 <updateCube+0x46>
- 1ec:	44 0f       	add	r20, r20
- 1ee:	55 1f       	adc	r21, r21
- 1f0:	0a 94       	dec	r0
- 1f2:	e2 f7       	brpl	.-8      	; 0x1ec <updateCube+0x42>
+ 1de:	10 9a       	sbi	0x02, 0	; 2
+ 1e0:	21 50       	subi	r18, 0x01	; 1
+ 1e2:	31 09       	sbc	r19, r1
+ 1e4:	38 f7       	brcc	.-50     	; 0x1b4 <updateCube+0xa>
+ 1e6:	61 50       	subi	r22, 0x01	; 1
+ 1e8:	71 09       	sbc	r23, r1
+ 1ea:	50 f0       	brcs	.+20     	; 0x200 <updateCube+0x56>
+ 1ec:	ad 01       	movw	r20, r26
+ 1ee:	06 2e       	mov	r0, r22
+ 1f0:	02 c0       	rjmp	.+4      	; 0x1f6 <updateCube+0x4c>
+ 1f2:	44 0f       	add	r20, r20
+ 1f4:	55 1f       	adc	r21, r21
+ 1f6:	0a 94       	dec	r0
+ 1f8:	e2 f7       	brpl	.-8      	; 0x1f2 <updateCube+0x48>
 	{
 		for (unsigned char j = 0; j<4; j++)
 		{
 			//Output the data on DS line according to the
 			//Value of MSB
-			if((buffer[3-j][0] & (1<<7-i)) == 0 )
- 1f4:	23 e0       	ldi	r18, 0x03	; 3
- 1f6:	30 e0       	ldi	r19, 0x00	; 0
- 1f8:	de cf       	rjmp	.-68     	; 0x1b6 <updateCube+0xc>
+			if((buffer[3-j][currentLayer] & (1<<7-i)) == 0 )
+ 1fa:	23 e0       	ldi	r18, 0x03	; 3
+ 1fc:	30 e0       	ldi	r19, 0x00	; 0
+ 1fe:	da cf       	rjmp	.-76     	; 0x1b4 <updateCube+0xa>
 		}
 	}
 
 	//Now all 8 bits have been transferred to shift register
 	//Move them to output latch at one
 	SHIFTREG_CLKPORT |= (1<<LATCH_PIN);//Set the pin high to enable on output
- 1fa:	11 9a       	sbi	0x02, 1	; 2
+ 200:	11 9a       	sbi	0x02, 1	; 2
 	SHIFTREG_CLKPORT &= ~(1<<LATCH_PIN);//Set RCLK pin Low
- 1fc:	11 98       	cbi	0x02, 1	; 2
- 1fe:	08 95       	ret
+ 202:	11 98       	cbi	0x02, 1	; 2
+ 204:	08 95       	ret
 
-00000200 <__vector_13>:
+00000206 <__vector_13>:
 		}
 	}
 }
 
 ISR(TIMER2_COMPA_vect)
 {
- 200:	1f 92       	push	r1
- 202:	0f 92       	push	r0
- 204:	0f b6       	in	r0, 0x3f	; 63
- 206:	0f 92       	push	r0
- 208:	11 24       	eor	r1, r1
- 20a:	0b b6       	in	r0, 0x3b	; 59
+ 206:	1f 92       	push	r1
+ 208:	0f 92       	push	r0
+ 20a:	0f b6       	in	r0, 0x3f	; 63
  20c:	0f 92       	push	r0
- 20e:	2f 93       	push	r18
- 210:	3f 93       	push	r19
- 212:	4f 93       	push	r20
- 214:	5f 93       	push	r21
- 216:	6f 93       	push	r22
- 218:	7f 93       	push	r23
- 21a:	8f 93       	push	r24
- 21c:	9f 93       	push	r25
- 21e:	af 93       	push	r26
- 220:	bf 93       	push	r27
- 222:	ef 93       	push	r30
- 224:	ff 93       	push	r31
-	updateCube();
- 226:	c1 df       	rcall	.-126    	; 0x1aa <updateCube>
+ 20e:	11 24       	eor	r1, r1
+ 210:	0b b6       	in	r0, 0x3b	; 59
+ 212:	0f 92       	push	r0
+ 214:	2f 93       	push	r18
+ 216:	3f 93       	push	r19
+ 218:	4f 93       	push	r20
+ 21a:	5f 93       	push	r21
+ 21c:	6f 93       	push	r22
+ 21e:	7f 93       	push	r23
+ 220:	8f 93       	push	r24
+ 222:	9f 93       	push	r25
+ 224:	af 93       	push	r26
+ 226:	bf 93       	push	r27
+ 228:	ef 93       	push	r30
+ 22a:	ff 93       	push	r31
+	//Turn of all layers
+	LAYER_PORT &= 0xFF;
+ 22c:	88 b1       	in	r24, 0x08	; 8
+ 22e:	88 b9       	out	0x08, r24	; 8
 	
+	//Update the cube
+	updateCube();
+ 230:	bc df       	rcall	.-136    	; 0x1aa <updateCube>
+	
+	//Enable the layer
+	LAYER_PORT |= (1<<(7-currentLayer));
+ 232:	80 91 00 02 	lds	r24, 0x0200	; 0x800200 <_edata>
+ 236:	48 b1       	in	r20, 0x08	; 8
+ 238:	27 e0       	ldi	r18, 0x07	; 7
+ 23a:	30 e0       	ldi	r19, 0x00	; 0
+ 23c:	28 1b       	sub	r18, r24
+ 23e:	31 09       	sbc	r19, r1
+ 240:	81 e0       	ldi	r24, 0x01	; 1
+ 242:	90 e0       	ldi	r25, 0x00	; 0
+ 244:	02 c0       	rjmp	.+4      	; 0x24a <__vector_13+0x44>
+ 246:	88 0f       	add	r24, r24
+ 248:	99 1f       	adc	r25, r25
+ 24a:	2a 95       	dec	r18
+ 24c:	e2 f7       	brpl	.-8      	; 0x246 <__vector_13+0x40>
+ 24e:	84 2b       	or	r24, r20
+ 250:	88 b9       	out	0x08, r24	; 8
+	
+	//Increment the layer value
+	//If we are currently updating layer 3, goto layer 0
+	if (currentLayer++ == 3)
+ 252:	80 91 00 02 	lds	r24, 0x0200	; 0x800200 <_edata>
+ 256:	91 e0       	ldi	r25, 0x01	; 1
+ 258:	98 0f       	add	r25, r24
+ 25a:	90 93 00 02 	sts	0x0200, r25	; 0x800200 <_edata>
+ 25e:	83 30       	cpi	r24, 0x03	; 3
+ 260:	11 f4       	brne	.+4      	; 0x266 <__vector_13+0x60>
+	{
+		currentLayer = 0;
+ 262:	10 92 00 02 	sts	0x0200, r1	; 0x800200 <_edata>
+	}
 }
- 228:	ff 91       	pop	r31
- 22a:	ef 91       	pop	r30
- 22c:	bf 91       	pop	r27
- 22e:	af 91       	pop	r26
- 230:	9f 91       	pop	r25
- 232:	8f 91       	pop	r24
- 234:	7f 91       	pop	r23
- 236:	6f 91       	pop	r22
- 238:	5f 91       	pop	r21
- 23a:	4f 91       	pop	r20
- 23c:	3f 91       	pop	r19
- 23e:	2f 91       	pop	r18
- 240:	0f 90       	pop	r0
- 242:	0b be       	out	0x3b, r0	; 59
- 244:	0f 90       	pop	r0
- 246:	0f be       	out	0x3f, r0	; 63
- 248:	0f 90       	pop	r0
- 24a:	1f 90       	pop	r1
- 24c:	18 95       	reti
+ 266:	ff 91       	pop	r31
+ 268:	ef 91       	pop	r30
+ 26a:	bf 91       	pop	r27
+ 26c:	af 91       	pop	r26
+ 26e:	9f 91       	pop	r25
+ 270:	8f 91       	pop	r24
+ 272:	7f 91       	pop	r23
+ 274:	6f 91       	pop	r22
+ 276:	5f 91       	pop	r21
+ 278:	4f 91       	pop	r20
+ 27a:	3f 91       	pop	r19
+ 27c:	2f 91       	pop	r18
+ 27e:	0f 90       	pop	r0
+ 280:	0b be       	out	0x3b, r0	; 59
+ 282:	0f 90       	pop	r0
+ 284:	0f be       	out	0x3f, r0	; 63
+ 286:	0f 90       	pop	r0
+ 288:	1f 90       	pop	r1
+ 28a:	18 95       	reti
 
-0000024e <initFrameBufferTimer>:
+0000028c <initFrameBufferTimer>:
  16000000/256/11 = 56818.18 interrupts per second
  56818.18/4 layers = 1420 frames per second
  *************************************************************************/
 void initFrameBufferTimer()
 {
 	OCR2A = 10; //interrupt at counter = 10
- 24e:	8a e0       	ldi	r24, 0x0A	; 10
- 250:	80 93 b3 00 	sts	0x00B3, r24	; 0x8000b3 <__TEXT_REGION_LENGTH__+0x7000b3>
+ 28c:	8a e0       	ldi	r24, 0x0A	; 10
+ 28e:	80 93 b3 00 	sts	0x00B3, r24	; 0x8000b3 <__TEXT_REGION_LENGTH__+0x7000b3>
 	TCCR2A |= (1<<WGM21); //CTC mode. Reset Counter when OCR2 reached
- 254:	e0 eb       	ldi	r30, 0xB0	; 176
- 256:	f0 e0       	ldi	r31, 0x00	; 0
- 258:	80 81       	ld	r24, Z
- 25a:	82 60       	ori	r24, 0x02	; 2
- 25c:	80 83       	st	Z, r24
+ 292:	e0 eb       	ldi	r30, 0xB0	; 176
+ 294:	f0 e0       	ldi	r31, 0x00	; 0
+ 296:	80 81       	ld	r24, Z
+ 298:	82 60       	ori	r24, 0x02	; 2
+ 29a:	80 83       	st	Z, r24
 	TCCR2B |= (1<<CS21)|(1<<CS22); //Set prescaler = 256
- 25e:	e1 eb       	ldi	r30, 0xB1	; 177
- 260:	f0 e0       	ldi	r31, 0x00	; 0
- 262:	80 81       	ld	r24, Z
- 264:	86 60       	ori	r24, 0x06	; 6
- 266:	80 83       	st	Z, r24
+ 29c:	e1 eb       	ldi	r30, 0xB1	; 177
+ 29e:	f0 e0       	ldi	r31, 0x00	; 0
+ 2a0:	80 81       	ld	r24, Z
+ 2a2:	86 60       	ori	r24, 0x06	; 6
+ 2a4:	80 83       	st	Z, r24
 	TCNT2 = 0x00; //Set counter register = 0
- 268:	10 92 b2 00 	sts	0x00B2, r1	; 0x8000b2 <__TEXT_REGION_LENGTH__+0x7000b2>
+ 2a6:	10 92 b2 00 	sts	0x00B2, r1	; 0x8000b2 <__TEXT_REGION_LENGTH__+0x7000b2>
 	TIMSK2 |= (1<<OCIE2A); // Compare match interrupt when OCR2A reached
- 26c:	e0 e7       	ldi	r30, 0x70	; 112
- 26e:	f0 e0       	ldi	r31, 0x00	; 0
- 270:	80 81       	ld	r24, Z
- 272:	82 60       	ori	r24, 0x02	; 2
- 274:	80 83       	st	Z, r24
- 276:	08 95       	ret
+ 2aa:	e0 e7       	ldi	r30, 0x70	; 112
+ 2ac:	f0 e0       	ldi	r31, 0x00	; 0
+ 2ae:	80 81       	ld	r24, Z
+ 2b0:	82 60       	ori	r24, 0x02	; 2
+ 2b2:	80 83       	st	Z, r24
+ 2b4:	08 95       	ret
 
-00000278 <_exit>:
- 278:	f8 94       	cli
+000002b6 <_exit>:
+ 2b6:	f8 94       	cli
 
-0000027a <__stop_program>:
- 27a:	ff cf       	rjmp	.-2      	; 0x27a <__stop_program>
+000002b8 <__stop_program>:
+ 2b8:	ff cf       	rjmp	.-2      	; 0x2b8 <__stop_program>

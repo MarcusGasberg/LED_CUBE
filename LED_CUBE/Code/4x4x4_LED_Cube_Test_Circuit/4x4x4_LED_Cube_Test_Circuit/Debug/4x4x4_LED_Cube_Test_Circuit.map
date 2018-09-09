@@ -8,7 +8,7 @@ f:/marcus/software/atmel studio 7.0/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/..
 Allocating common symbols
 Common symbol       size              file
 
-z                   0x2               main.o
+currentLayer        0x1               main.o
 buffer              0x10              main.o
 
 Discarded input sections
@@ -193,7 +193,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000      0x27c
+.text           0x00000000      0x2ba
  *(.vectors)
  .vectors       0x00000000       0xe4 f:/marcus/software/atmel studio 7.0/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr6/crtatmega2560.o
                 0x00000000                __vector_default
@@ -316,19 +316,19 @@ END GROUP
  .text.main     0x00000166       0x44 main.o
                 0x00000166                main
  .text.updateCube
-                0x000001aa       0x56 main.o
+                0x000001aa       0x5c main.o
                 0x000001aa                updateCube
  .text.__vector_13
-                0x00000200       0x4e main.o
-                0x00000200                __vector_13
+                0x00000206       0x86 main.o
+                0x00000206                __vector_13
  .text.initFrameBufferTimer
-                0x0000024e       0x2a Timers.o
-                0x0000024e                initFrameBufferTimer
-                0x00000278                . = ALIGN (0x2)
+                0x0000028c       0x2a Timers.o
+                0x0000028c                initFrameBufferTimer
+                0x000002b6                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x00000278        0x0 f:/marcus/software/atmel studio 7.0/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr6\libgcc.a(_exit.o)
-                0x00000278                _exit
-                0x00000278                exit
+ .fini9         0x000002b6        0x0 f:/marcus/software/atmel studio 7.0/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr6\libgcc.a(_exit.o)
+                0x000002b6                _exit
+                0x000002b6                exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -347,11 +347,11 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x00000278        0x4 f:/marcus/software/atmel studio 7.0/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr6\libgcc.a(_exit.o)
+ .fini0         0x000002b6        0x4 f:/marcus/software/atmel studio 7.0/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr6\libgcc.a(_exit.o)
  *(.fini0)
-                0x0000027c                _etext = .
+                0x000002ba                _etext = .
 
-.data           0x00800200        0x0 load address 0x0000027c
+.data           0x00800200        0x0 load address 0x000002ba
                 [!provide]                PROVIDE (__data_start, .)
  *(.data)
  *(.data*)
@@ -363,23 +363,23 @@ END GROUP
                 0x00800200                _edata = .
                 [!provide]                PROVIDE (__data_end, .)
 
-.bss            0x00800200       0x12
+.bss            0x00800200       0x11
                 0x00800200                PROVIDE (__bss_start, .)
  *(.bss)
  *(.bss*)
  *(COMMON)
- COMMON         0x00800200       0x12 main.o
-                0x00800200                z
-                0x00800202                buffer
-                0x00800212                PROVIDE (__bss_end, .)
-                0x0000027c                __data_load_start = LOADADDR (.data)
-                0x0000027c                __data_load_end = (__data_load_start + SIZEOF (.data))
+ COMMON         0x00800200       0x11 main.o
+                0x00800200                currentLayer
+                0x00800201                buffer
+                0x00800211                PROVIDE (__bss_end, .)
+                0x000002ba                __data_load_start = LOADADDR (.data)
+                0x000002ba                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x00800212        0x0
+.noinit         0x00800211        0x0
                 [!provide]                PROVIDE (__noinit_start, .)
  *(.noinit*)
                 [!provide]                PROVIDE (__noinit_end, .)
-                0x00800212                _end = .
+                0x00800211                _end = .
                 [!provide]                PROVIDE (__heap_start, .)
 
 .eeprom         0x00810000        0x0
@@ -458,26 +458,26 @@ END GROUP
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x11dd
+.debug_info     0x00000000     0x11c7
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0xbbc f:/marcus/software/atmel studio 7.0/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr6/crtatmega2560.o
  .debug_info    0x00000bbc      0x355 Draw.o
- .debug_info    0x00000f11      0x24a main.o
- .debug_info    0x0000115b       0x82 Timers.o
+ .debug_info    0x00000f11      0x234 main.o
+ .debug_info    0x00001145       0x82 Timers.o
 
-.debug_abbrev   0x00000000      0xe35
+.debug_abbrev   0x00000000      0xe08
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0xb1a f:/marcus/software/atmel studio 7.0/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr6/crtatmega2560.o
  .debug_abbrev  0x00000b1a      0x12e Draw.o
- .debug_abbrev  0x00000c48      0x19e main.o
- .debug_abbrev  0x00000de6       0x4f Timers.o
+ .debug_abbrev  0x00000c48      0x171 main.o
+ .debug_abbrev  0x00000db9       0x4f Timers.o
 
-.debug_line     0x00000000      0x46f
+.debug_line     0x00000000      0x48e
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000       0x1a f:/marcus/software/atmel studio 7.0/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr6/crtatmega2560.o
  .debug_line    0x0000001a      0x1ad Draw.o
- .debug_line    0x000001c7      0x1ed main.o
- .debug_line    0x000003b4       0xbb Timers.o
+ .debug_line    0x000001c7      0x20c main.o
+ .debug_line    0x000003d3       0xbb Timers.o
 
 .debug_frame    0x00000000      0x174
  *(.debug_frame)
@@ -485,13 +485,13 @@ END GROUP
  .debug_frame   0x000000c4       0x8c main.o
  .debug_frame   0x00000150       0x24 Timers.o
 
-.debug_str      0x00000000      0x64a
+.debug_str      0x00000000      0x657
  *(.debug_str)
  .debug_str     0x00000000      0x3e6 f:/marcus/software/atmel studio 7.0/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr6/crtatmega2560.o
  .debug_str     0x000003e6      0x1a1 Draw.o
- .debug_str     0x00000587       0xb5 main.o
-                                0x240 (size before relaxing)
- .debug_str     0x0000063c        0xe Timers.o
+ .debug_str     0x00000587       0xc2 main.o
+                                0x24d (size before relaxing)
+ .debug_str     0x00000649        0xe Timers.o
                                 0x1bf (size before relaxing)
 
 .debug_loc      0x00000000      0x7f2

@@ -16,6 +16,7 @@
 //Shift register pins
 #define SHIFTREG_SERPORT PORTB
 #define SHIFTREG_CLKPORT PORTA
+#define LAYER_PORT PORTC
 #define SHIFT_PIN 0
 #define LATCH_PIN 1
 #define SER_PIN 0
@@ -23,20 +24,21 @@
 void updateCube();
 
 volatile unsigned char buffer[4][4];
-volatile unsigned int z;
+volatile unsigned char currentLayer;
 
 int main(void)
 {
-	unsigned char i,j = 0;
-	z = 0;
+	currentLayer = 0;
 	initFrameBufferTimer();
 	DDRA = 0xFF; //Set PORTA Output
 	DDRB = 0xFF; //Set PORTB Output
+	DDRC = 0xFF; //set PORTC Output
 	PORTA = 0x00; //Clear PORTA
 	PORTB = 0x00; //Clear PORTB
+	PORTC = 0x00; //Clear PORTC
 	sei();
     while (1) 
-    {
+    { 
 		for (unsigned char i = 0; i < 4; i++)
 		{
 			for (unsigned char j = 0; j<4; j++)
@@ -50,8 +52,21 @@ int main(void)
 
 ISR(TIMER2_COMPA_vect)
 {
+	//Turn of all layers
+	LAYER_PORT &= 0xFF;
+	
+	//Update the cube
 	updateCube();
 	
+	//Enable the layer
+	LAYER_PORT |= (1<<currentLayer);
+	
+	//Increment the layer value
+	//If we are currently updating layer 3, goto layer 0
+	if (currentLayer++ == 3)
+	{
+		currentLayer = 0;
+	}
 }
 
 
@@ -59,7 +74,6 @@ ISR(TIMER2_COMPA_vect)
 void updateCube()
 {
 	//Send each 8 bits serially
-	cli();
 	//Order is MSB first
 	for(unsigned char i=0;i<8;i++)
 	{
@@ -67,7 +81,7 @@ void updateCube()
 		{
 			//Output the data on DS line according to the
 			//Value of MSB
-			if((buffer[3-j][0] & (1<<7-i)) == 0 )
+			if((buffer[3-j][currentLayer] & (1<<7-i)) == 0 )
 			{
 				//MSB is 0 so output low
 				SHIFTREG_SERPORT &= ~(1<<SER_PIN);
@@ -86,5 +100,4 @@ void updateCube()
 	//Move them to output latch at one
 	SHIFTREG_CLKPORT |= (1<<LATCH_PIN);//Set the pin high to enable on output
 	SHIFTREG_CLKPORT &= ~(1<<LATCH_PIN);//Set RCLK pin Low
-
 }
