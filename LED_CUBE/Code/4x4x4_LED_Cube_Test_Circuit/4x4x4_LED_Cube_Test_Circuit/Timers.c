@@ -30,9 +30,9 @@
  *************************************************************************/
 void initFrameBufferTimer()
 {
-	OCR2A = 10; //interrupt at counter = 10
+	OCR2A = 30; //interrupt at counter = 15
 	TCCR2A |= (1<<WGM21); //CTC mode. Reset Counter when OCR2 reached
-	TCCR2B |= (1<<CS21)|(1<<CS22); //Set prescaler = 256
+	TCCR2B |= (1<<CS22)|(1<<CS21)|(1<<CS22); //Set prescaler = 1024
 	TCNT2 = 0x00; //Set counter register = 0
 	TIMSK2 |= (1<<OCIE2A); // Compare match interrupt when OCR2A reached
 }

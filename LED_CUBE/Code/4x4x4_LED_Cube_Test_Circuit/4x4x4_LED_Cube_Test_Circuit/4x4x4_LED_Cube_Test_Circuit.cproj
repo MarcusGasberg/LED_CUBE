@@ -122,6 +122,12 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Animations.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Animations.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Draw.c">
       <SubType>compile</SubType>
     </Compile>
