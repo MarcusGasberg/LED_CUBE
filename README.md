@@ -7,3 +7,9 @@ Project contains a program for controlling a 8x8x8 Atmega2560 microcontroller wi
 * Layer Control
 * Rain Animation
 * Wall Bounce Animation
+
+![Rain Animation](https://media.giphy.com/media/7zQ02Ca47pU38gBiuG/giphy.gif)
+
+![Wall Collapse](https://media.giphy.com/media/9GIv06f7RW2hDkNmLo/giphy.gif)
+
+![Wall Bounce](https://media.giphy.com/media/1ykTVBUNW5j0XnfdMn/giphy.gif)
